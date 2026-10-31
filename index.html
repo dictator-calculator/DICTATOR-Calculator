@@ -47,6 +47,10 @@ header .w{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:10px v
 .brand{font-size:22px;color:var(--red);font-weight:900;letter-spacing:.5px;margin:0;cursor:pointer}
 .logo{height:44px;width:44px;border-radius:12px;object-fit:cover;cursor:pointer;display:block;border:1px solid var(--bd)}
 .logo-big{width:180px;height:180px;border-radius:24px;object-fit:cover;display:block;margin:0 auto 16px}
+.brandbox{display:flex;align-items:center;gap:10px;cursor:pointer}
+.bt{font-size:22px;font-weight:900;font-style:italic;letter-spacing:1px;color:#fff;line-height:1}
+.bt b{color:var(--red);font-weight:900}
+@media(max-width:380px){.bt{font-size:18px}}
 .spacer{flex:1}
 .iconbtn{background:var(--hi);border:1px solid var(--bd);color:#fff;width:44px;height:44px;padding:0;border-radius:12px;font-size:18px}
 
@@ -224,7 +228,7 @@ document.addEventListener('click',e=>{
 function shell(){
   app.innerHTML=`
   <header><div class="w">
-    <img class="logo" src="${LOGO}" alt="Dictator" onclick="home()">
+    <div class="brandbox" onclick="home()"><img class="logo" src="${LOGO}" alt="Dictator"><span class="bt">DIC<b>TATOR</b></span></div>
     <div class="spacer"></div>
     <div class="menu">
       <button class="iconbtn" onclick="toggleMenu(event)" aria-label="Menu">☰</button>
