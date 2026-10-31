@@ -238,7 +238,7 @@ function shell(){
         ${staff()?'<button onclick="closeMenu();entry()">📝 Nhập kỷ lục</button><button onclick="closeMenu();backups()">🗄 Bản lưu trước</button><button onclick="closeMenu();members()">👥 Thành viên</button>':''}
         <div class="sep"></div>
         <button disabled style="opacity:.6">👤 ${esc(me.username)} (${esc(me.role)})</button>
-        <button onclick="closeMenu();sb.auth.signOut().then(()=>location.reload())">🚪 Thoát</button>
+        <button onclick="logout()">🚪 Thoát</button>
       </div>
     </div>
     <div class="sr">
@@ -247,6 +247,13 @@ function shell(){
     </div>
   </div></header>
   <main class="w" id="v"></main>`
+}
+async function logout(){
+  closeMenu();
+  try{if(pch){sb.removeChannel(pch);pch=null}}catch(e){}
+  try{await Promise.race([sb.auth.signOut({scope:'local'}),new Promise(r=>setTimeout(r,1500))])}catch(e){}
+  try{Object.keys(localStorage).filter(k=>k.startsWith('sb-')).forEach(k=>localStorage.removeItem(k));Object.keys(sessionStorage).filter(k=>k.startsWith('sb-')).forEach(k=>sessionStorage.removeItem(k))}catch(e){}
+  me=null;location.reload()
 }
 function toggleMenu(e){e.stopPropagation();menuOpen=!menuOpen;document.getElementById('menuPanel').classList.toggle('open',menuOpen)}
 function closeMenu(){menuOpen=false;const p=document.getElementById('menuPanel');if(p)p.classList.remove('open')}
