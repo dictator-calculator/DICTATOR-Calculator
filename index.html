@@ -4,7 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#000">
-<title>SHK PRIVATE</title>
+<title>DICTATOR</title>
+<link rel="icon" type="image/jpeg" href="logo.jpg">
+<link rel="apple-touch-icon" href="logo.jpg">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <style>
 :root{
@@ -42,6 +44,8 @@ header{position:sticky;top:0;z-index:20;background:#000e;backdrop-filter:blur(10
   -webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--bd);padding-top:env(safe-area-inset-top)}
 header .w{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:10px var(--pad)}
 .brand{font-size:22px;color:var(--red);font-weight:900;letter-spacing:.5px;margin:0;cursor:pointer}
+.logo{height:44px;width:44px;border-radius:12px;object-fit:cover;cursor:pointer;display:block;border:1px solid var(--bd)}
+.logo-big{width:180px;height:180px;border-radius:24px;object-fit:cover;display:block;margin:0 auto 16px}
 .spacer{flex:1}
 .iconbtn{background:var(--hi);border:1px solid var(--bd);color:#fff;width:44px;height:44px;padding:0;border-radius:12px;font-size:18px}
 
@@ -116,6 +120,7 @@ tr.out td{opacity:.55}
 <div id="app"></div>
 <div id="toast"></div>
 <script>
+const LOGO='logo.jpg';
 const URL_='https://unatinuxtabuvbhmszrv.supabase.co',KEY='sb_publishable_HBrKaDwH-tPqZfnN6pcpmw_kULc-rvP';
 const sb=supabase.createClient(URL_,KEY),app=document.getElementById('app');
 
@@ -162,8 +167,8 @@ async function boot(){
   session?start(session.user):authView()
 }
 function authView(reg){
-  app.innerHTML=`<div class="w" style="max-width:400px;padding-top:10vh">
-    <h1 style="font-size:30px;color:var(--red)">SHK Private</h1>
+  app.innerHTML=`<div class="w" style="max-width:400px;padding-top:6vh">
+    <img class="logo-big" src="${LOGO}" alt="Dictator">
     <p class="mu">${reg?'Tạo tài khoản bằng tên đăng nhập, không cần email.':'Đăng nhập để xem bảng điểm.'}</p>
     <div class="card">
       <input id="u" placeholder="Tên đăng nhập (a-z, 0-9, _)" autocomplete="username" autocapitalize="none">
@@ -179,12 +184,13 @@ function authView(reg){
 async function auth(reg){
   const u=document.getElementById('u').value.trim().toLowerCase(),password=document.getElementById('p').value;
   if(!/^[a-z0-9_]{3,32}$/.test(u))return toast('Tên đăng nhập 3-32 ký tự a-z, 0-9, _');
-  const email=u+'@shk.local';let r;
+  const email=u+'@dictator.local';let r;
   if(reg){
     r=await sb.auth.signUp({email,password});if(r.error)return toast(r.error.message);
     if(!r.data.session)return toast('Hãy tắt "Confirm email" trong Supabase (Authentication > Providers > Email).');
   }else{
-    r=await sb.auth.signInWithPassword({email,password});if(r.error)return toast('Sai tên đăng nhập hoặc mật khẩu.')
+    r=await sb.auth.signInWithPassword({email,password});
+    if(r.error){const o=await sb.auth.signInWithPassword({email:u+'@shk.local',password});if(o.error)return toast('Sai tên đăng nhập hoặc mật khẩu.');r=o}
   }
   start(r.data.user)
 }
@@ -217,7 +223,7 @@ document.addEventListener('click',e=>{
 function shell(){
   app.innerHTML=`
   <header><div class="w">
-    <h2 class="brand" onclick="home()">SHK</h2>
+    <img class="logo" src="${LOGO}" alt="Dictator" onclick="home()">
     <div class="spacer"></div>
     <div class="menu">
       <button class="iconbtn" onclick="toggleMenu(event)" aria-label="Menu">☰</button>
@@ -504,13 +510,12 @@ function showRacer(id){
   </div>`)
 }
 
-/* ---------- thành viên ---------- */
 /* ---------- online (Supabase Realtime Presence) ---------- */
 let PRES={},pch=null;
 const isOn=id=>!!PRES[id];
 function startPresence(){
   if(pch||!me||!me.id)return;
-  pch=sb.channel('shk-online',{config:{presence:{key:String(me.id)}}});
+  pch=sb.channel('dictator-online',{config:{presence:{key:String(me.id)}}});
   pch.on('presence',{event:'sync'},()=>{PRES=pch.presenceState();paintOnline()})
      .subscribe(async st=>{if(st==='SUBSCRIBED')await pch.track({u:me.username,at:Date.now()})})
 }
