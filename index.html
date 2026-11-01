@@ -11,8 +11,8 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <style>
 :root{
-  --bg:#000;--card:#111;--hi:#1a1a1a;--bd:#2a2a2a;--tx:#fff;--mu:#9a9a9a;
-  --red:#ef4444;--gold:#fbbf24;--pad:14px;--rad:14px;
+  --bg:#000;--card:#111;--hi:rgba(255,255,255,.16);--bd:rgba(255,255,255,.9);--tx:#111;--mu:#111;
+  --red:#ef4444;--gold:#b45309;--pad:14px;--rad:14px;
   --dim:.12;                /* độ tối đều của nền (0 = nền sáng nguyên bản, cao hơn = tối hơn) */
   --card-alpha:0;         /* độ đặc của ô chức năng: giảm = trong suốt hơn */
   --card-blur:3px;         /* độ nhòe nền phía sau ô chức năng */
@@ -30,9 +30,12 @@ body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;bac
 h1,h2{margin:0;font-weight:800}
 a,button{font:inherit;cursor:pointer}
 input,select{
-  background:var(--bg);color:var(--tx);border:1px solid var(--bd);
+  background:transparent;color:#000;border:2px solid var(--bd);
   border-radius:12px;padding:12px 14px;width:100%;font:inherit;min-height:46px;
+  -webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);
 }
+input::placeholder{color:rgba(0,0,0,.6)}
+option{color:#000;background:#fff}
 input:focus,select:focus,button:focus-visible{outline:2px solid var(--red);outline-offset:1px}
 button{
   background:var(--red);color:#fff;border:0;border-radius:12px;
@@ -41,9 +44,9 @@ button{
   transition:transform .05s ease,opacity .15s;
 }
 button:active{transform:scale(.97);opacity:.9}
-button.g{background:var(--hi);border:1px solid var(--bd)}
+button.g{background:transparent;color:#000;border:2px solid var(--bd);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
 button.d{background:#7f1d1d}
-button.x.e{background:var(--hi);border:1px solid var(--bd)}
+button.x.e{background:transparent;color:#000;border:2px solid var(--bd)}
 button.x{background:#7f1d1d;padding:4px 10px;margin-left:6px;font-size:12px;border-radius:8px;min-height:auto}
 .w{max-width:1000px;margin:0 auto;padding:var(--pad)}
 /* ô chức năng: nền mờ hơn, làm nhòe ảnh phía sau */
@@ -55,12 +58,11 @@ button.x{background:#7f1d1d;padding:4px 10px;margin-left:6px;font-size:12px;bord
 
 header{position:sticky;top:0;z-index:20;background:transparent;padding-top:env(safe-area-inset-top)}
 header::before{content:"";position:absolute;left:0;right:0;top:0;bottom:-28px;z-index:-1;pointer-events:none;
-  background:linear-gradient(rgba(0,0,0,.28),rgba(0,0,0,0));
+  background:linear-gradient(rgba(255,255,255,.3),rgba(255,255,255,0));
   -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
   -webkit-mask-image:linear-gradient(#000 70%,transparent);mask-image:linear-gradient(#000 70%,transparent)}
 header .w{display:flex;gap:14px;align-items:center;flex-wrap:wrap;padding:14px var(--pad)}
-header input{background:rgba(0,0,0,.6);border-color:rgba(255,255,255,.18);min-height:52px}
-header input::placeholder{color:#cfcfcf}
+header input{min-height:52px}
 .logo{height:76px;width:76px;border-radius:18px;object-fit:cover;cursor:pointer;display:block;border:1px solid rgba(0,0,0,.12);box-shadow:0 6px 18px rgba(0,0,0,.28)}
 .logo-big{width:180px;height:180px;border-radius:24px;object-fit:cover;display:block;margin:0 auto 16px}
 .brandbox{display:flex;align-items:center;gap:14px;cursor:pointer}
@@ -68,11 +70,11 @@ header input::placeholder{color:#cfcfcf}
 .wm{height:58px;width:auto;display:block;filter:drop-shadow(0 0 3px rgba(255,255,255,.9)) drop-shadow(0 0 10px rgba(255,255,255,.55))}
 @media(max-width:520px){.logo{height:60px;width:60px;border-radius:15px}.wm{height:44px}.iconbtn{width:48px;height:48px}}
 .spacer{flex:1}
-.iconbtn{background:rgba(0,0,0,.6);border:1px solid rgba(255,255,255,.18);color:#fff;width:52px;height:52px;padding:0;border-radius:14px;font-size:20px;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.iconbtn{background:transparent;border:2px solid var(--bd);color:#000;width:52px;height:52px;padding:0;border-radius:14px;font-size:20px;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
 
 .sr{position:relative;flex:1;min-width:0;order:3;width:100%}
 @media(min-width:700px){.sr{order:0;width:auto}}
-.dd{position:absolute;left:0;right:0;top:100%;margin-top:6px;background:#111;border:1px solid var(--bd);
+.dd{position:absolute;left:0;right:0;top:100%;margin-top:6px;background:rgba(255,255,255,.72);color:#000;border:2px solid var(--bd);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
   border-radius:12px;display:none;z-index:30;max-height:60vh;overflow-y:auto;box-shadow:0 12px 32px #000a}
 .dd div{padding:12px 14px;cursor:pointer;display:flex;justify-content:space-between;gap:8px;align-items:center}
 .dd div:active,.dd div:hover{background:var(--hi)}
@@ -82,7 +84,7 @@ header input::placeholder{color:#cfcfcf}
 @media(max-width:520px){.grid{grid-template-columns:1fr;gap:12px}}
 .mc{overflow:hidden;display:flex;flex-direction:column}
 /* ô trong suốt: giữ chữ rõ bằng bóng chữ nhẹ */
-.card,.mc{text-shadow:0 1px 3px rgba(0,0,0,.65)}
+.card,.mc{text-shadow:0 0 4px rgba(255,255,255,.7)}
 .card button,.mc button,.card input,.card select{text-shadow:none}
 .mc .im{aspect-ratio:16/9;background:#0a0a0a center/cover;cursor:pointer}
 .mc .b{padding:12px}
@@ -92,7 +94,7 @@ header input::placeholder{color:#cfcfcf}
 
 .sc{overflow-x:auto;-webkit-overflow-scrolling:touch}
 table{width:100%;border-collapse:collapse}
-th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--bd);white-space:nowrap}
+th,td{text-align:left;padding:10px 8px;border-bottom:1px solid rgba(0,0,0,.2);white-space:nowrap}
 th{color:var(--mu);font-weight:600;font-size:13px}
 td.t{font-variant-numeric:tabular-nums;color:var(--gold);font-weight:700}
 tr.out td{opacity:.55}
@@ -103,7 +105,7 @@ tr.out td{opacity:.55}
   table.rank td:nth-child(1){width:34px}
   table.list,table.list thead,table.list tbody,table.list tr,table.list th,table.list td{display:block;width:100%}
   table.list thead,table.list tr.h{display:none}
-  table.list tr{background:rgba(26,26,26,.6);border:1px solid var(--bd);border-radius:12px;padding:10px 12px;margin-bottom:10px}
+  table.list tr{background:rgba(255,255,255,.14);border:2px solid var(--bd);border-radius:12px;padding:10px 12px;margin-bottom:10px}
   table.list td{border:0;padding:4px 0;white-space:normal;display:flex;justify-content:space-between;gap:12px;align-items:center}
   table.list td::before{content:attr(data-l);color:var(--mu);font-size:12px;font-weight:600;letter-spacing:.04em}
 }
@@ -111,13 +113,13 @@ tr.out td{opacity:.55}
 @media(max-width:420px){.two{grid-template-columns:1fr}}
 .hist{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
 #toast{position:fixed;bottom:calc(18px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);
-  max-width:calc(100% - 32px);background:var(--hi);border:1px solid var(--bd);padding:12px 18px;border-radius:12px;
+  max-width:calc(100% - 32px);background:rgba(255,255,255,.85);color:#000;border:2px solid var(--bd);padding:12px 18px;border-radius:12px;
   display:none;z-index:50;box-shadow:0 10px 30px #000a;text-align:center}
 .menu{position:relative}
-.menu-panel{position:absolute;right:0;top:calc(100% + 8px);background:#111;border:1px solid var(--bd);
+.menu-panel{position:absolute;right:0;top:calc(100% + 8px);background:rgba(255,255,255,.72);color:#000;border:2px solid var(--bd);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
   border-radius:12px;padding:6px;min-width:200px;display:none;z-index:40;box-shadow:0 12px 32px #000c;flex-direction:column;gap:4px}
 .menu-panel.open{display:flex}
-.menu-panel button{width:100%;justify-content:flex-start;background:transparent;border:0;border-radius:8px;padding:12px;min-height:44px}
+.menu-panel button{width:100%;justify-content:flex-start;background:transparent;color:#000;border:0;border-radius:8px;padding:12px;min-height:44px}
 .menu-panel button:hover,.menu-panel button:active{background:var(--hi)}
 .menu-panel .sep{height:1px;background:var(--bd);margin:4px 2px}
 .hero{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
@@ -125,20 +127,20 @@ tr.out td{opacity:.55}
 
 /* toggle ngày */
 .date-toggle{display:flex;gap:8px;margin-top:6px}
-.date-toggle button{flex:1;background:var(--hi);border:1px solid var(--bd);color:var(--tx);
+.date-toggle button{flex:1;background:transparent;border:2px solid var(--bd);color:#000;
   font-weight:600;padding:10px;min-height:42px;font-size:14px}
 .date-toggle button.on{background:var(--red);border-color:var(--red);color:#fff}
 .date-wrap{margin-top:8px}
 
 /* bảng điểm giải R1-R9 */
-.tt th,.tt td{text-align:center;white-space:nowrap;padding:8px 10px;vertical-align:top;border-bottom:1px solid var(--bd)}
-.tt td:first-child,.tt th:first-child{position:sticky;left:0;background:#141414;text-align:left;z-index:1;border-right:1px solid var(--bd)}
+.tt th,.tt td{text-align:center;white-space:nowrap;padding:8px 10px;vertical-align:top;border-bottom:1px solid rgba(0,0,0,.2)}
+.tt td:first-child,.tt th:first-child{position:sticky;left:0;background:rgba(255,255,255,.3);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);text-align:left;z-index:1;border-right:1px solid rgba(0,0,0,.2)}
 .tt small{font-size:12px}
 
 /* trạng thái online */
 .dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:#555;margin-right:8px;vertical-align:middle}
 .dot.on{background:#22c55e;box-shadow:0 0 8px #22c55e}
-.ost.on{color:#22c55e;font-weight:700}
+.ost.on{color:#15803d;font-weight:700}
 </style>
 </head>
 <body>
@@ -532,7 +534,7 @@ function showRacer(id){
     ${e.length?`<div class="sc"><table class="list">
       <tr class="h"><th>Map</th><th>Hạng</th><th>Kỷ lục</th><th>Xe · Pet</th><th>Điểm</th></tr>
       ${e.map(x=>`<tr>
-        <td data-l="Map"><a style="color:#fff" onclick="showMap('${x.map_id}')">${esc(mname(x.map_id))}</a></td>
+        <td data-l="Map"><a style="color:#000;text-decoration:underline" onclick="showMap('${x.map_id}')">${esc(mname(x.map_id))}</a></td>
         <td data-l="Hạng" class="gold">${x.rank}</td>
         <td data-l="Kỷ lục" class="t">${fmt(x.time_ms)}</td>
         <td data-l="Xe · Pet">${esc(x.car||'—')} · ${esc(x.pet||'—')}</td>
