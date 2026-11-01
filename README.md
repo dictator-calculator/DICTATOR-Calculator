@@ -1,1 +1,1 @@
-# SHK-Caculator
+# DICTATOR-Caculator
