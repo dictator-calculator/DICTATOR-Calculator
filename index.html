@@ -135,27 +135,29 @@ tr.out td{opacity:.55}
 .ost.on{color:#15803d;font-weight:700}
 
 /* ===== HIỆU ỨNG PHÓNG TO KHI RÊ CHUỘT ===== */
-.mc,.card{
-  position:relative;
-  transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+.mc{
+  position:relative;cursor:pointer;
+  transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease;
   will-change:transform;
 }
-.mc{cursor:pointer}
 .mc .im{transition:transform .35s ease}
+button,.zoomable{
+  transition:transform .18s ease,box-shadow .18s ease,filter .18s ease,opacity .15s;
+}
 @media (hover:hover) and (pointer:fine){
   .mc:hover{
-    transform:scale(1.06);
-    z-index:5;
+    transform:scale(1.06);z-index:5;
     box-shadow:0 14px 34px rgba(0,0,0,.45);
     border-color:#fff;
   }
   .mc:hover .im{transform:scale(1.08)}
-  .card:hover{
-    transform:scale(1.015);
-    z-index:4;
-    box-shadow:0 12px 30px rgba(0,0,0,.35);
+  button:not(:disabled):hover,.zoomable:hover{
+    transform:scale(1.08);
+    box-shadow:0 6px 16px rgba(0,0,0,.3);
+    filter:brightness(1.08);
   }
-  .mc button:hover{filter:brightness(1.1);transform:translateY(-1px)}
+  button:not(:disabled):active{transform:scale(.97)}
+  .menu-panel button:hover{transform:none;box-shadow:none;filter:none}
 }
 </style>
 </head>
@@ -332,7 +334,7 @@ function board(){
     <h2 style="font-size:18px">Xếp hạng tay đua</h2>
     <p class="mu" style="margin:2px 0 10px">Điểm tính tự động từ top 5 thời gian nhanh nhất của mỗi map: Top 1 = 5 điểm, Top 2 = 4, Top 3 = 3, Top 4 = 2, Top 5 = 1.</p>
     ${rankTable(L.slice(0,5))}
-    ${L.length>5?`<div onclick="allRank()" style="margin-top:12px;padding:12px;text-align:center;background:var(--hi);border:1px solid var(--bd);border-radius:12px;cursor:pointer;font-weight:700">Xem tất cả ${L.length} tay đua →</div>`:''}
+    ${L.length>5?`<div class="zoomable" onclick="allRank()" style="margin-top:12px;padding:12px;text-align:center;background:var(--hi);border:1px solid var(--bd);border-radius:12px;cursor:pointer;font-weight:700">Xem tất cả ${L.length} tay đua →</div>`:''}
   </div>`
 }
 function allRank(){
@@ -356,14 +358,11 @@ function home(){
     ${board()}
     ${maps.length?'':'<p class="mu">Chưa có map. '+(staff()?'Vào "Nhập kỷ lục" để thêm map đầu tiên.':'Hãy chờ admin thêm map.')+'</p>'}
     <div class="grid">
-      ${maps.map(m=>`<div class="mc">
-        <div class="im" style="${m.image_url?`background-image:url('${esc(m.image_url)}')`:''}" onclick="showMap('${m.id}')"></div>
+      ${maps.map(m=>`<div class="mc" onclick="showMap('${m.id}')">
+        <div class="im" style="${m.image_url?`background-image:url('${esc(m.image_url)}')`:''}"></div>
         <div class="b">
           <b>${esc(m.name)}</b> <span class="gold">${st(m.difficulty)}</span>
-          <div class="actions">
-            <button onclick="showMap('${m.id}')">Top 5</button>
-            ${delMode?`<button class="d" onclick="delMap('${m.id}')">Xóa</button>`:''}
-          </div>
+          ${delMode?`<div class="actions"><button class="d" onclick="event.stopPropagation();delMap('${m.id}')">Xóa</button></div>`:''}
         </div>
       </div>`).join('')}
     </div>`)
