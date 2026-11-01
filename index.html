@@ -32,7 +32,6 @@ a,button{font:inherit;cursor:pointer}
 input,select{
   background:transparent;color:#000;border:2px solid var(--bd);
   border-radius:12px;padding:12px 14px;width:100%;font:inherit;min-height:46px;
-  -webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);
 }
 input::placeholder{color:rgba(0,0,0,.6)}
 option{color:#000;background:#fff}
@@ -44,7 +43,7 @@ button{
   transition:transform .05s ease,opacity .15s;
 }
 button:active{transform:scale(.97);opacity:.9}
-button.g{background:transparent;color:#000;border:2px solid var(--bd);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+button.g{background:transparent;color:#000;border:2px solid var(--bd)}
 button.d{background:#7f1d1d}
 button.x.e{background:transparent;color:#000;border:2px solid var(--bd)}
 button.x{background:#7f1d1d;padding:4px 10px;margin-left:6px;font-size:12px;border-radius:8px;min-height:auto}
@@ -134,7 +133,7 @@ tr.out td{opacity:.55}
 
 /* bảng điểm giải R1-R9 */
 .tt th,.tt td{text-align:center;white-space:nowrap;padding:8px 10px;vertical-align:top;border-bottom:1px solid rgba(0,0,0,.2)}
-.tt td:first-child,.tt th:first-child{position:sticky;left:0;background:rgba(255,255,255,.3);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);text-align:left;z-index:1;border-right:1px solid rgba(0,0,0,.2)}
+.tt td:first-child,.tt th:first-child{text-align:left;background:transparent}
 .tt small{font-size:12px}
 
 /* trạng thái online */
