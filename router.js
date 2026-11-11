@@ -6,7 +6,7 @@ const R={on:false,init:false},O={},U='([0-9a-f-]{36})';
 const H={
   home:()=>'/', allRank:()=>'/xep-hang', giai:()=>'/giai', setTour:id=>'/giai/'+id,
   entryRound:(m,r)=>`/giai/nhap/${r||1}${m?'/'+m:''}`,
-  showMap:id=>'/map/'+id, showHistory:id=>`/map/${id}/lich-su`, showRacer:id=>'/tay-dua/'+id,
+  showMap:(id,v)=>'/map/'+id+(v==='top5'?'/top5':''), showHistory:id=>`/map/${id}/lich-su`, showRacer:id=>'/tay-dua/'+id,
   members:()=>'/thanh-vien', entry:m=>'/nhap'+(m?'/'+m:''), addMapView:()=>'/them-map', backups:()=>'/ban-luu',
   editRec:(id,h)=>`/sua/${id}/${h?1:0}`
 };
@@ -17,7 +17,8 @@ const P=[
   ['giai',/^\/giai$/,()=>[]],
   ['setTour',new RegExp(`^/giai/${U}$`),m=>[m[1]]],
   ['entryRound',new RegExp(`^/giai/nhap/(\\d)(?:/${U})?$`),m=>[m[2]||0,+m[1]]],
-  ['showMap',new RegExp(`^/map/${U}$`),m=>[m[1]]],
+  ['showMap',new RegExp(`^/map/${U}$`),m=>[m[1],'']],
+  ['showMap',new RegExp(`^/map/${U}/top5$`),m=>[m[1],'top5']],
   ['showHistory',new RegExp(`^/map/${U}/lich-su$`),m=>[m[1]]],
   ['showRacer',new RegExp(`^/tay-dua/${U}$`),m=>[m[1]]],
   ['members',/^\/thanh-vien$/,()=>[]],
@@ -39,7 +40,7 @@ function go(h){
   render()
 }
 /* bọc các hàm điều hướng: bấm chức năng = mở link mới */
-P.forEach(([n])=>{O[n]=window[n];window[n]=(...a)=>R.on?O[n](...a):go(H[n](...a))});
+[...new Set(P.map(x=>x[0]))].forEach(n=>{O[n]=window[n];window[n]=(...a)=>R.on?O[n](...a):go(H[n](...a))});
 /* sau đăng nhập: mở đúng link đang có trên thanh địa chỉ (F5 hoặc dán link vẫn vào đúng trang) */
 const S=window.start;
 window.start=async u=>{R.init=true;try{await S(u)}finally{R.init=false}render()};
