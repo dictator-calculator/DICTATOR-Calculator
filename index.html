@@ -90,6 +90,9 @@ header input{min-height:52px}
 /* Vua đường đua */
 .king{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:6px;font-weight:700}
 .king .t{color:var(--gold);font-variant-numeric:tabular-nums;white-space:nowrap}
+.kingbox{padding:10px 14px;border:2px solid var(--bd);border-radius:12px;background:var(--hi)}
+.kingbox .king{margin-top:0}
+.kingbox .kd{display:block;font-size:12px;font-weight:600;margin-top:2px}
 .more{display:block;text-align:center;margin-top:14px;opacity:.5;cursor:pointer;text-decoration:underline;transition:opacity .15s}
 .more:hover{opacity:1}
 .gap{font-size:.8em;font-weight:700;color:var(--gold);white-space:nowrap}
@@ -647,6 +650,7 @@ function entry(mapId){
       <input id="emq" placeholder="Tìm và chọn map..." oninput="mapSugg(1)" onfocus="mapSugg()" autocomplete="off" autocapitalize="none">
       <div class="dd" id="edd"></div>
     </div>
+    <div id="kb" style="margin:-4px 0 14px"></div>
     <datalist id="rl">${racers.map(r=>`<option value="${esc(r.name)}">`).join('')}</datalist>
     <input list="rl" id="r" placeholder="Tên tay đua" autocomplete="off" autocapitalize="words">
     <div class="two">
@@ -699,8 +703,18 @@ document.addEventListener('input',e=>{
   if(hidden)hidden.value=iso||'';
 });
 
+/* Khung "Vua đường đua" hiện ngay dưới ô chọn map */
+function kingBox(id){
+  const el=document.getElementById('kb');if(!el)return;
+  if(!id){el.innerHTML='';return}
+  const k=king(id);
+  el.innerHTML=k
+    ?`<div class="kingbox"><div class="king"><span>👑 Vua đường đua: <b>${esc(rn(k.racer_id))}</b></span><span class="t">${fmt(k.time_ms)}</span></div>
+       <small class="mu kd">${esc(k.car||'—')} · ${esc(k.pet||'—')}${(fd(k.posted_on)||fdt(k.created_at))?' · '+(fd(k.posted_on)||fdt(k.created_at)):''}</small></div>`
+    :`<div class="kingbox"><div class="king mu"><span>👑 Chưa có vua đường đua</span></div></div>`
+}
 function mapSugg(typed){
-  if(typed)em='';
+  if(typed){em='';kingBox('')}
   const q=nz(document.getElementById('emq').value.trim()),dd=document.getElementById('edd');
   const r=maps.filter(m=>!q||nz(m.name).includes(q)).slice(0,8);
   dd.innerHTML=r.map(m=>`<div onclick="pickMap('${m.id}')"><span>🗺 ${esc(m.name)}</span><small class="gold">${st(m.difficulty)}</small></div>`).join('')||'<div class="mu">Không tìm thấy map.</div>';
@@ -710,6 +724,7 @@ function pickMap(id){
   em=id;
   document.getElementById('emq').value=mname(id);
   document.getElementById('edd').style.display='none';
+  kingBox(id);
   preview(id)
 }
 function preview(id){
@@ -758,6 +773,7 @@ async function save(){
     ['r','t','c','p'].forEach(k=>document.getElementById(k).value='');
     setDateMode('today');
   }
+  kingBox(em);
   preview(em)
 }
 
@@ -832,6 +848,7 @@ window.entryRound=async function(mapId,rd){
     <p class="mu">Giải: <b>${esc(TS.find(t=>t.id==TID).name)}</b>. Nhập tối đa 4 tay đua theo thứ tự bất kỳ, web tự xếp từ nhanh đến chậm (Top 1 ở trên cùng) và tính điểm: Top 1 = 10 điểm, các hạng sau trừ 1 điểm cho mỗi giây cách top 1. Kỷ lục cũng được lưu vào map và bảng xếp hạng clan.</p>
     <select id="rd" onchange="fillRound()" style="margin:8px 0">${[1,2,3,4,5,6,7,8,9].map(n=>`<option value="${n}">R${n}${RES.some(r=>r.round_no==n)?' ✓ đã nhập':''}</option>`).join('')}</select>
     <div class="sr" style="margin:6px 0 4px"><input id="emq" placeholder="Tìm và chọn map..." oninput="mapSugg(1)" onfocus="mapSugg()" autocomplete="off" autocapitalize="none"><div class="dd" id="edd"></div></div>
+    <div id="kb" style="margin:8px 0 6px"></div>
     <datalist id="rl">${racers.map(r=>`<option value="${esc(r.name)}">`).join('')}</datalist>
     ${[0,1,2,3].map(i=>`<div class="rb" style="margin-top:14px"><b class="gold" id="lb${i}">Tay đua ${i+1}</b>
       <input list="rl" id="n${i}" placeholder="Tên tay đua" autocomplete="off" style="margin-top:6px">
